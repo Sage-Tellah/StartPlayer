@@ -25,7 +25,7 @@ import com.google.android.gms.analytics.Tracker;
 import java.util.*;
 
 import static android.graphics.Color.*;
-
+//worked
 /**
  * Created by TFE on 15/7/2015.
  */
@@ -144,7 +144,7 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
         if (t < 1) return c/2 * Math.pow( 2, 10 * (t - 1) ) + b;
         t--;
         return c/2 * ( -Math.pow( 2, -10 * t) + 2 ) + b;
-    };
+    }
 
     public class alpha extends Thread {
 
@@ -153,7 +153,7 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                 try {
                     Thread.sleep(500);
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
                 for (int i = 0; i < 20; i++) {
                     if (random != 3) {
@@ -166,7 +166,7 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                     try {
                         Thread.sleep(10);
                     } catch (Exception e) {
-
+                        e.printStackTrace();
                     }
                 }
             }
@@ -276,7 +276,7 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                         try {
                             Thread.sleep(0);
                         } catch (Exception e) {
-
+                            e.printStackTrace();
 
                         }
 
