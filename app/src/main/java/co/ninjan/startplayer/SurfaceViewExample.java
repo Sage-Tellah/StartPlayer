@@ -25,7 +25,7 @@ import com.google.android.gms.analytics.Tracker;
 import java.util.*;
 
 import static android.graphics.Color.*;
-//worked
+
 /**
  * Created by TFE on 15/7/2015.
  */
