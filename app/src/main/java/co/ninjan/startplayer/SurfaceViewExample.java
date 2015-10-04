@@ -18,6 +18,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.graphics.Paint.FontMetrics;
+import android.graphics.Paint;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -31,8 +33,10 @@ import static android.graphics.Color.*;
  */
 public class SurfaceViewExample extends Activity implements View.OnTouchListener {
 
+    public boolean showOrder = false;
     public boolean kill = false;
     public int random = 99;
+    public boolean allowRestart = false;
     OurView v;
     float[] xarray = new float[] {0, 0, 0, 0, 0, 0, 0};
     float[] yarray = new float[] {0, 0, 0, 0, 0, 0, 0};
@@ -40,6 +44,9 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
     List<Float> x = new ArrayList<>();
     List<Float> y = new ArrayList<>();
     List<Float> size = new ArrayList<>();
+    List<Float> textBounds = new ArrayList<>();
+
+    public boolean textBoundsArrayDone = false;
 
     public static GoogleAnalytics analytics;
     public static Tracker tracker;
@@ -48,13 +55,17 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
     public boolean initialText = false;
 
     public int cHeight;
+    public int cWidth;
 
     public boolean alphastarted = false;
     public boolean chosen = false;
     public int pointerC;
     public static int timeri = 0;
 
+    public double start = 1.55;
+
     Paint green = new Paint();
+    Paint cyan = new Paint();
     Paint red = new Paint();
     Paint yellow = new Paint();
     Paint blue = new Paint();
@@ -64,7 +75,10 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
     Paint font2 = new Paint();
     Paint arcs = new Paint();
     Paint arcYellow = new Paint();
+    Paint box = new Paint();
 
+    public float textWidth;
+    public float textHeight;
 
     public Vibrator vibrate;
 
@@ -157,6 +171,7 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                 }
                 for (int i = 0; i < 20; i++) {
                     if (random != 3) {
+                        box.setColor(Color.argb((int) (i * 3), 255, 255, 255));
                         font.setColor(Color.argb((int) (i * 12.75), 255, 255, 255));
                     }
                     else
@@ -182,9 +197,10 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
             holder = getHolder();
         }
 
-
-
         public void run() {
+
+
+
             green.setColor(rgb(76, 175, 80));
             green.setAntiAlias(true);
             red.setColor(rgb(175, 76, 80));
@@ -197,10 +213,13 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
             purple.setAntiAlias(true);
             orange.setColor(rgb(255, 163, 32));
             orange.setAntiAlias(true);
+            cyan.setAntiAlias(true);
+            cyan.setColor(rgb(0,255,255));
 
             font.setTextAlign(Paint.Align.CENTER);
             Typeface lm = Typeface.createFromAsset(getAssets(), "fonts/Nilland.ttf");
             font.setTypeface(lm);
+            box.setARGB(0,255,255,255);
             font.setAntiAlias(true);
             font2.setTextAlign(Paint.Align.CENTER);
             font2.setTypeface(lm);
@@ -225,14 +244,15 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                 font.setTextSize(c.getHeight()/12);
                 font2.setTextSize(c.getHeight()/18);
                 cHeight = c.getHeight();
+                cWidth = c.getWidth();
                 c.drawARGB(255, 25, 25, 25);
 
                 int i = 0;
                 font2.getTextBounds("Place your fingers", 0, "Place your fingers".length(), bounds);
                 //Log.d("", Integer.toString(bounds.height()));
                 c.drawText("Place your fingers", c.getWidth() / 2, (c.getHeight() / 2) - bounds.height() / 2 - 15, font2);
-                c.drawText("here to begin", c.getWidth() / 2, (c.getHeight() / 2) + bounds.height()/2 + 15, font2);
-                oval[0].set(c.getWidth()/2 - 500,c.getHeight()/2 - 500,c.getWidth()/2 + 500,c.getHeight()/2 + 500);
+                c.drawText("here to begin", c.getWidth() / 2, (c.getHeight() / 2) + bounds.height() / 2 + 15, font2);
+                oval[0].set(c.getWidth() / 2 - 500, c.getHeight() / 2 - 500, c.getWidth() / 2 + 500, c.getHeight() / 2 + 500);
 
                 c.drawCircle(x.get(i), y.get(i), size.get(i), green);
 
@@ -240,31 +260,31 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                 c.drawArc(oval[i], 270, sAngle, true, arcs);
 
                 i++;
-                c.drawCircle(x.get(i), y.get(i), size.get(i) , red);
+                c.drawCircle(x.get(i), y.get(i), size.get(i), red);
 
                 oval[i].set(x.get(i) - size.get(i), y.get(i) - size.get(i), x.get(i) + size.get(i), y.get(i) + size.get(i));
                 c.drawArc(oval[i], 270, sAngle, true, arcs);
 
                 i++;
-                c.drawCircle(x.get(i), y.get(i), size.get(i) , yellow);
+                c.drawCircle(x.get(i), y.get(i), size.get(i), yellow);
 
                 oval[i].set(x.get(i) - size.get(i), y.get(i) - size.get(i), x.get(i) + size.get(i), y.get(i) + size.get(i));
                 c.drawArc(oval[i], 270, sAngle, true, arcYellow);
 
                 i++;
-                c.drawCircle(x.get(i), y.get(i), size.get(i) , blue);
+                c.drawCircle(x.get(i), y.get(i), size.get(i), blue);
 
                 oval[i].set(x.get(i) - size.get(i), y.get(i) - size.get(i), x.get(i) + size.get(i), y.get(i) + size.get(i));
                 c.drawArc(oval[i], 270, sAngle, true, arcs);
 
                 i++;
-                c.drawCircle(x.get(i), y.get(i), size.get(i) , purple);
+                c.drawCircle(x.get(i), y.get(i), size.get(i), purple);
 
                 oval[i].set(x.get(i) - size.get(i), y.get(i) - size.get(i), x.get(i) + size.get(i), y.get(i) + size.get(i));
                 c.drawArc(oval[i], 270, sAngle, true, arcs);
 
                 i++;
-                c.drawCircle(x.get(i), y.get(i), size.get(i) , orange);
+                c.drawCircle(x.get(i), y.get(i), size.get(i), orange);
 
                 oval[i].set(x.get(i) - size.get(i), y.get(i) - size.get(i), x.get(i) + size.get(i), y.get(i) + size.get(i));
                 c.drawArc(oval[i], 270, sAngle, true, arcs);
@@ -287,67 +307,123 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                         case 1:
                             c.drawCircle(x.get(random - 1), y.get(random - 1), sizedone / 2, green);
                             c.drawText("Green Starts!", c.getWidth() / 2, c.getHeight() / 2, font);
-                            font.setTextSize(font.getTextSize()/3);
+                            /*font.setTextSize(font.getTextSize()/3);
                             c.drawText("Tap to start again.", c.getWidth()/2, (float) (c.getHeight()*0.95), font);
                             if (!alphastarted) {
                                 alphastarted = true;
                                 alpha alpha = new alpha();
                                 alpha.start();
-                            }
+                            }*/
                             break;
                         case 2:
                             c.drawCircle(x.get(random - 1), y.get(random - 1), sizedone / 2, red);
                             c.drawText("Red Starts!", c.getWidth()/2, c.getHeight()/2, font);
-                            font.setTextSize(font.getTextSize()/3);
+                            /*font.setTextSize(font.getTextSize()/3);
                             c.drawText("Tap to start again.", c.getWidth()/2, (float) (c.getHeight()*0.95), font);
                             if (!alphastarted) {
                                 alphastarted = true;
                                 alpha alpha = new alpha();
                                 alpha.start();
-                            }
+                            }*/
                             break;
                         case 3:
                             c.drawCircle(x.get(random - 1), y.get(random - 1), sizedone / 2, yellow);
                             c.drawText("Yellow Starts!", c.getWidth()/2, c.getHeight()/2, font);
-                            font.setTextSize(font.getTextSize()/3);
+                            /*font.setTextSize(font.getTextSize()/3);
                             c.drawText("Tap to start again.", c.getWidth()/2, (float) (c.getHeight()*0.95), font);
                             if (!alphastarted) {
                                 alphastarted = true;
                                 alpha alpha = new alpha();
                                 alpha.start();
-                            }
+                            }*/
                             break;
                         case 4:
                             c.drawCircle(x.get(random - 1), y.get(random - 1), sizedone / 2, blue);
                             c.drawText("Blue Starts!", c.getWidth()/2, c.getHeight()/2, font);
-                            font.setTextSize(font.getTextSize()/3);
+                            /*font.setTextSize(font.getTextSize()/3);
                             c.drawText("Tap to start again.", c.getWidth()/2, (float) (c.getHeight()*0.95), font);
                             if (!alphastarted) {
                                 alphastarted = true;
                                 alpha alpha = new alpha();
                                 alpha.start();
-                            }
+                            }*/
                             break;
                         case 5:
                             c.drawCircle(x.get(random - 1), y.get(random - 1), sizedone / 2, purple);
                             c.drawText("Purple Starts!", c.getWidth()/2, c.getHeight()/2, font);
-                            font.setTextSize(font.getTextSize()/3);
+                            /*font.setTextSize(font.getTextSize()/3);
                             c.drawText("Tap to start again.", c.getWidth()/2, (float) (c.getHeight()*0.95), font);
+                            if (!alphastarted) {
+                                alphastarted = true;
+                                alpha alpha = new alpha();
+                                alpha.start();
+                            }*/
+                            break;
+                        case 6:
+                            c.drawCircle(x.get(random - 1), y.get(random - 1), sizedone / 2, orange);
+                            c.drawText("Orange Starts!", c.getWidth() / 2, c.getHeight() / 2, font);
+                            /*font.setTextSize(font.getTextSize()/3);
+                            c.drawText("See complete order", c.getWidth()/2, (float) (c.getHeight()*0.80), font);
+                            if (!alphastarted) {
+                                alphastarted = true;
+                                alpha alpha = new alpha();
+                                alpha.start();
+                            }*/
+                            break;
+                    }
+                    switch (random) {
+                        case 99:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                            font.setTextSize(font.getTextSize()/3);
+                            textWidth = font.measureText("See complete order");
+                            textHeight = font.getTextSize();
+
+
+                            c.drawText("Tap to start again.", c.getWidth()/2, (float) (c.getHeight()*0.95), font);
+                            //c.drawRect(0,0,200,200,test);
+                            if (!textBoundsArrayDone) {
+                                textBounds.add((float) (c.getWidth() * 0.5 - textWidth * 0.5 - 20));
+                                textBounds.add((float) (c.getHeight() * 0.85 - textHeight));
+                                textBounds.add((float) (c.getWidth() * 0.5 + textWidth * 0.5 + 20));
+                                textBounds.add((float) (c.getHeight() * 0.85 + textHeight * 0.5));
+                                textBoundsArrayDone = true;
+                            }
+                            //c.drawRect((float) (c.getWidth() * 0.5 - textWidth * 0.5 - 20), (float) (c.getHeight() * 0.85 - textHeight), (float) (c.getWidth() * 0.5 + textWidth * 0.5 + 20), (float) (c.getHeight() * 0.85 + textHeight * 0.5), box);
+                            c.drawText("See complete order", c.getWidth()/2, (float) (c.getHeight()*0.85), font);
                             if (!alphastarted) {
                                 alphastarted = true;
                                 alpha alpha = new alpha();
                                 alpha.start();
                             }
-                            break;
-                        case 6:
-                            c.drawCircle(x.get(random - 1), y.get(random - 1), sizedone / 2, orange);
-                            c.drawText("Orange Starts!", c.getWidth() / 2, c.getHeight() / 2, font);
-                            font.setTextSize(font.getTextSize()/3);
-                            c.drawText("Tap to start again.", c.getWidth()/2, (float) (c.getHeight()*0.95), font);
-                            if (!alphastarted) {
-                                alphastarted = true;
-                                alpha alpha = new alpha();
-                                alpha.start();
+
+                            if (showOrder) {
+                                double sin[] = {(c.getHeight() / 2 * Math.sin(start) + c.getHeight() / 2),
+                                        ((c.getHeight() / 2 - c.getHeight()/12) * Math.sin(start) + (c.getHeight() / 2 - c.getHeight() / 12) + (c.getHeight()/6)),
+                                        ((c.getHeight() / 2 - 2*(c.getHeight()/12)) * Math.sin(start) + (c.getHeight() / 2 - 2*(c.getHeight() / 12)) + 2*(c.getHeight()/6)),
+                                        ((c.getHeight() / 2 - 3*(c.getHeight()/12)) * Math.sin(start) + (c.getHeight() / 2 - 3*(c.getHeight() / 12)) + 3*(c.getHeight()/6)),
+                                        ((c.getHeight() / 2 - 4*(c.getHeight()/12)) * Math.sin(start) + (c.getHeight() / 2 - 4*(c.getHeight() / 12)) + 4*(c.getHeight()/6)),
+                                        ((c.getHeight() / 2 - 5*(c.getHeight()/12)) * Math.sin(start) + (c.getHeight() / 2 - 5*(c.getHeight() / 12)) + 5*(c.getHeight()/6))};
+                                //Log.d("", "" + ((c.getHeight() / 4 * Math.sin(start) + c.getHeight() / 4 + (c.getHeight()/2)*2) + ((c.getHeight() / 4 * Math.sin(start) + c.getHeight() / 4 - ((c.getHeight()/2)*2)) + (c.getHeight() / 6))));
+                                //double sines = c.getHeight() / 2 * Math.sin(start) + c.getHeight() / 2;
+                                c.drawRect((float) (0), (float) (sin[0]), (float) (c.getWidth()), (float) (sin[0] + (c.getHeight() / 6)), blue);
+                                c.drawRect((float) (0), (float) (sin[1]), (float) (c.getWidth()), (float) (sin[1] + (c.getHeight() / 6)), orange);
+                                c.drawRect((float) (0), (float) (sin[2]), (float) (c.getWidth()), (float) ((sin[2] + (c.getHeight() / 6))), purple);
+                                c.drawRect((float) (0), (float) (sin[3]), (float) (c.getWidth()), (float) ((sin[3] + (c.getHeight() / 6))), yellow);
+                                c.drawRect((float) (0), (float) (sin[4]), (float) (c.getWidth()), (float) ((sin[4] + (c.getHeight() / 6))), red);
+                                c.drawRect((float) (0), (float) (sin[5]), (float) (c.getWidth()), (float) ((sin[5] + (c.getHeight() / 6))), cyan);
+                                if (start > -1.6) {
+                                    start = start - 0.05;
+                                }
+                                try {
+                                    Thread.sleep(1000 / 60);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                             break;
                     }
@@ -462,7 +538,6 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
 
     public boolean onTouch(View v, final MotionEvent me) {
         switch (MotionEvent.ACTION_MASK & me.getAction()){
-
             case MotionEvent.ACTION_POINTER_DOWN:
                 try {
                     Float.toString(x.get(pointerC - 1));
@@ -551,10 +626,18 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                     initialText = true;
                 }
                 if (random != 99) {
-                    recreate();/*
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);*/
+                    if (me.getX() + 50 > textBounds.get(0) && me.getY() + 50 > textBounds.get(1) && me.getX() < textBounds.get(2) + 50 && me.getY() < textBounds.get(3) + 50)
+                    {
+                        showOrder = true;
+                        Log.d("BUTTON!!!!", "BUTTON!!!!");
+                    }
+                    else {
+                        Log.d("!!!!", "" + textBounds.get(0) + " " + textBounds.get(1) + " " + textBounds.get(2) + " " + textBounds.get(3) + " X " + me.getX() + " Y " + me.getY());
+                        recreate();
+                    }
+                    if (allowRestart) {
+                        recreate();
+                    }
                 }
                 else {
                         pointerC = me.getPointerCount();
