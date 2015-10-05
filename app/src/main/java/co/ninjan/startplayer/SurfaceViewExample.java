@@ -38,6 +38,8 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
 
     Paint orderTextFont = new Paint();
 
+    public boolean orderTextAlphaDone = false;
+
     public boolean showOrder = false;
     public boolean kill = false;
     public int random[] = {99,1,1,1,1,1};
@@ -192,6 +194,21 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                 }
             }
         }
+
+    public class orderTextAlphaEase extends Thread {
+        @Override
+        public void run() {
+            for (int i = 0; i <= 20; i++) {
+                orderTextFont.setARGB((int) (255 + (i*12.75)),255,255,255);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public class OurView extends SurfaceView implements Runnable{
 
         Thread t = null;
@@ -251,6 +268,8 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
             arcYellow.setAntiAlias(true);
 
             RectF[] oval = {new RectF(), new RectF(), new RectF(), new RectF(), new RectF(), new RectF(), new RectF()};
+
+
 
             while (isItOk) {
                 if (!holder.getSurface().isValid()) {
@@ -426,6 +445,7 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                                 double halfHeight = c.getHeight()/2;
                                 double sixthHeight = c.getHeight()/playerCount;
                                 double twelfthHeight = c.getHeight()/(2*playerCount);
+                                orderTextFont.setTextSize(font.getTextSize()*2);
                                 double sin[] = {(c.getHeight() / 2 * startSin + c.getHeight() / 2),
                                         ((halfHeight - twelfthHeight) * startSin + (c.getHeight() / 2 - twelfthHeight) + (sixthHeight)),
                                         ((halfHeight - 2*(twelfthHeight)) * startSin + (halfHeight - 2*(twelfthHeight)) + 2*(sixthHeight)),
@@ -434,16 +454,28 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                                         ((halfHeight - 5*(twelfthHeight)) * startSin + (halfHeight - 5*(twelfthHeight)) + 5*(sixthHeight))};
                                 //Log.d("", "" + ((c.getHeight() / 4 * Math.sin(start) + c.getHeight() / 4 + (c.getHeight()/2)*2) + ((c.getHeight() / 4 * Math.sin(start) + c.getHeight() / 4 - ((c.getHeight()/2)*2)) + (c.getHeight() / 6))));
                                 //double sines = c.getHeight() / 2 * Math.sin(start) + c.getHeight() / 2;
+                                //orderTextAlpha=255;
                                 c.drawRect((float) (0), (float) (sin[0]), (float) (c.getWidth()), (float) (sin[0] + (sixthHeight)), colors[random[0] - 1]);
-                                /*Draw Text with array and orderTextFont, orderTextAlpha*/
+                                c.drawText("First", c.getWidth() / 2, (float) (sixthHeight / 2 + (orderTextFont.getTextSize() / 2)), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[1]), (float) (c.getWidth()), (float) (sin[1] + (sixthHeight)), colors[random[1] - 1]);
+                                //c.drawText("Second", c.getWidth() / 2, (float) (2 * (sixthHeight / 4 + (orderTextFont.getTextSize() / 2))), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[2]), (float) (c.getWidth()), (float) ((sin[2] + (sixthHeight))), colors[random[2] - 1]);
+                                //c.drawText("Third", c.getWidth() / 2, (float) (3 * (sixthHeight / 6 + (orderTextFont.getTextSize() / 2))), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[3]), (float) (c.getWidth()), (float) ((sin[3] + (sixthHeight))), colors[random[3] - 1]);
+                                //c.drawText("Fourth", c.getWidth() / 2, (float) (4 * (sixthHeight / 8 + (orderTextFont.getTextSize() / 2))), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[4]), (float) (c.getWidth()), (float) ((sin[4] + (sixthHeight))), colors[random[4] - 1]);
+                                //c.drawText("Fifth", c.getWidth() / 2, (float) (5 * (sixthHeight / 10 + (orderTextFont.getTextSize() / 2))), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[5]), (float) (c.getWidth()), (float) ((sin[5] + (sixthHeight))), colors[random[5] - 1]);
+                                //c.drawText("Sixth", c.getWidth()/2, (float) (6*(sixthHeight/12 + (orderTextFont.getTextSize()/2))) ,orderTextFont);
                                 if (start > -1.66) {
                                     start = start - 0.1;
-                                    Log.d("SINESEI", ""+start+" "+((c.getHeight() / 2 * startSin + c.getHeight() / 2)));
+                                    //Log.d("SINESEI", ""+start+" "+((c.getHeight() / 2 * startSin + c.getHeight() / 2)));
+                                } else {
+                                    if (!orderTextAlphaDone) {
+                                        orderTextAlphaEase orderTextAlphaEase = new orderTextAlphaEase();
+                                        orderTextAlphaEase.start();
+                                        orderTextAlphaDone = true;
+                                    }
                                 }
 
                                 /*try {
