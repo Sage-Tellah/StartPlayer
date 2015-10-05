@@ -40,6 +40,8 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
 
     public boolean orderTextAlphaDone = false;
 
+    public String colorWords[] = {"Green", "Red", "Yellow", "Blue", "Purple", "Orange"};
+
     public boolean showOrder = false;
     public boolean kill = false;
     public int random[] = {99,1,1,1,1,1};
@@ -456,17 +458,17 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                                 //double sines = c.getHeight() / 2 * Math.sin(start) + c.getHeight() / 2;
                                 //orderTextAlpha=255;
                                 c.drawRect((float) (0), (float) (sin[0]), (float) (c.getWidth()), (float) (sin[0] + (sixthHeight)), colors[random[0] - 1]);
-                                c.drawText("First", c.getWidth() / 2, (float) (sixthHeight / 2 + (orderTextFont.getTextSize() / 2)), orderTextFont);
+                                c.drawText(colorWords[random[0] - 1] + " Starts", c.getWidth() / 2, (float) (sixthHeight / 2 + (orderTextFont.getTextSize() / 2)), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[1]), (float) (c.getWidth()), (float) (sin[1] + (sixthHeight)), colors[random[1] - 1]);
-                                //c.drawText("Second", c.getWidth() / 2, (float) (2 * (sixthHeight / 4 + (orderTextFont.getTextSize() / 2))), orderTextFont);
+                                c.drawText(colorWords[random[1] - 1] + " is Second", c.getWidth() / 2, (float) ((sixthHeight / 2) + (sixthHeight) + (orderTextFont.getTextSize() / 2)), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[2]), (float) (c.getWidth()), (float) ((sin[2] + (sixthHeight))), colors[random[2] - 1]);
-                                //c.drawText("Third", c.getWidth() / 2, (float) (3 * (sixthHeight / 6 + (orderTextFont.getTextSize() / 2))), orderTextFont);
+                                c.drawText(colorWords[random[2] - 1] + " is Third", c.getWidth() / 2, (float) ((sixthHeight / 2) + 2 * (sixthHeight) + (orderTextFont.getTextSize() / 2)), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[3]), (float) (c.getWidth()), (float) ((sin[3] + (sixthHeight))), colors[random[3] - 1]);
-                                //c.drawText("Fourth", c.getWidth() / 2, (float) (4 * (sixthHeight / 8 + (orderTextFont.getTextSize() / 2))), orderTextFont);
+                                c.drawText(colorWords[random[3] - 1] + " is Fourth", c.getWidth() / 2, (float) ((sixthHeight / 2) + 3 * (sixthHeight) + (orderTextFont.getTextSize() / 2)), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[4]), (float) (c.getWidth()), (float) ((sin[4] + (sixthHeight))), colors[random[4] - 1]);
-                                //c.drawText("Fifth", c.getWidth() / 2, (float) (5 * (sixthHeight / 10 + (orderTextFont.getTextSize() / 2))), orderTextFont);
+                                c.drawText(colorWords[random[4] - 1] + " is Fifth", c.getWidth() / 2, (float) ((sixthHeight / 2) + 4 * (sixthHeight) + (orderTextFont.getTextSize() / 2)), orderTextFont);
                                 c.drawRect((float) (0), (float) (sin[5]), (float) (c.getWidth()), (float) ((sin[5] + (sixthHeight))), colors[random[5] - 1]);
-                                //c.drawText("Sixth", c.getWidth()/2, (float) (6*(sixthHeight/12 + (orderTextFont.getTextSize()/2))) ,orderTextFont);
+                                c.drawText(colorWords[random[5] - 1] + " is Sixth", c.getWidth() / 2, (float) ((sixthHeight / 2) + 5 * (sixthHeight) + (orderTextFont.getTextSize() / 2)), orderTextFont);
                                 if (start > -1.66) {
                                     start = start - 0.1;
                                     //Log.d("SINESEI", ""+start+" "+((c.getHeight() / 2 * startSin + c.getHeight() / 2)));
