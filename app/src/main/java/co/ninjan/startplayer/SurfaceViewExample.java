@@ -508,7 +508,6 @@ public class SurfaceViewExample extends Activity implements View.OnTouchListener
                                         ((halfHeight - 3*(twelfthHeight)) * startSin + (halfHeight - 3*(twelfthHeight)) + 3*(sixthHeight)),
                                         ((halfHeight - 4*(twelfthHeight)) * startSin + (halfHeight - 4*(twelfthHeight)) + 4*(sixthHeight)),
                                         ((halfHeight - 5*(twelfthHeight)) * startSin + (halfHeight - 5*(twelfthHeight)) + 5*(sixthHeight))};
-                                //Log.d("", "" + ((c.getHeight() / 4 * Math.sin(start) + c.getHeight() / 4 + (c.getHeight()/2)*2) + ((c.getHeight() / 4 * Math.sin(start) + c.getHeight() / 4 - ((c.getHeight()/2)*2)) + (c.getHeight() / 6))));
                                 //double sines = c.getHeight() / 2 * Math.sin(start) + c.getHeight() / 2;
                                 //orderTextAlpha=255;
                                 c.drawRect((float) (0), (float) (sin[0]), (float) (c.getWidth()), (float) (sin[0] + (sixthHeight)), colors[random[0] - 1]);
